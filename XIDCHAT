@@ -1,0 +1,30 @@
+pragma solidity 0.8.7;
+import "./AzookerOBJ.sol";
+
+contract XIDChat is AzookerOBJ { 
+constructor() AzookerUAI(false)  {}
+
+  mapping (address  => uint[] ) Chats;
+
+function MSGSend(string memory AI, string memory message) public AIOwner(AI)//Needed from - GLOBAL
+ { uint textID = OBJAdd(AI, message);  Chats[address(0)].push(textID); }
+
+ function MSGSendDM(string memory AI, address ToAddr, string memory message) public AIOwner(AI) //AI = User
+ { uint textID = OBJAdd(AI, message); Chats[ToAddr].push(textID); }
+
+
+  function MSGPush(uint ownID, string memory msgPush) public returns(string memory Full)//No Need Account
+   { string memory Object = RID_OBJ[XOwnerXID(ownID)];/*Name:Object/msgs/msgPush*/ 
+    Full = string(abi.encodePacked(Object,"/",msgPush));
+     OBJSet(ownID, Full); }
+
+
+  function MSGView() public view returns(uint[] memory)//No Need from account - GLOBAL
+{ return(Chats[address(0)]); }
+
+  function MSGList() public view returns(uint[] memory)//Messages at address
+  { return Chats[msg.sender]; }
+  
+   function MSGObjects(string memory AI) public view returns(uint[] memory AIList)//view chats no need account
+   {  AIList = OwnedOBJs(AI); }//View AI Objects -> While function OwnedOBJ(uint ownID) returns (string memory AI, string memory Object)
+}
