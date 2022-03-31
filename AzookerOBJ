@@ -1,0 +1,32 @@
+pragma solidity 0.8.7;
+
+import "./AzookerXID.sol";
+abstract contract AzookerOBJ is AzookerXID{ 
+
+    mapping(string => string) RID_OBJ;
+
+mapping(string => uint[])AI_IDS;
+function OwnedOBJs(string memory AI) internal view returns(uint[] memory)  { return(AI_IDS[AI]); }
+
+function OBJAdd(string memory AI, string memory objectID) internal returns(uint) {
+          uint ownID = XSetID(AI);
+          AI_IDS[AI].push(ownID);
+
+        string memory RealID = string(abi.encodePacked(AI,":",ownID));
+        XIDSet(ownID,  RealID);
+
+          RID_OBJ[RealID] = objectID;
+           return(ownID);  }
+           
+      function OBJSet(uint ownID, string memory objectID) internal returns(uint) {
+          RID_OBJ[XOwnerXID(ownID)] = objectID;
+           return(ownID);  }
+         
+      function OBJUndo(uint ownID) internal  {
+            RID_OBJ[XOwnerXID(ownID)] = "false"; }
+
+function OwnedOBJ(uint ownID) public view returns (string memory AI, string memory Object){//Web3
+AI = XOwnerID(ownID);
+Object = RID_OBJ[XOwnerXID(ownID)];
+return (AI, Object); } 
+}
